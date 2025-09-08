@@ -10,23 +10,10 @@
 	</parent>
 	<groupId>br.com.desenvolvimento.logica</groupId>
 	<artifactId>estoque-service</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>${estoque.service.version}</version>
 	<name>estoque-service</name>
-	<description>Demo project for Spring Boot</description>
-	<url/>
-	<licenses>
-		<license/>
-	</licenses>
-	<developers>
-		<developer/>
-	</developers>
-	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
-	</scm>
 	<properties>
+		<estoque.service.version>1.0.0</estoque.service.version>
 		<java.version>21</java.version>
 	</properties>
 	<dependencies>
@@ -37,6 +24,10 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
 
 		<dependency>

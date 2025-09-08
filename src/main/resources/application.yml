@@ -1,1 +1,17 @@
-spring.application.name=estoque-service
+server:
+  port: 8000
+spring:
+  application:
+    name: estoque-service
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/estoquedb
+    username: postgres
+    password: aA@741859
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
