@@ -51,6 +51,12 @@ public class ProdutoService {
             throw new BadRequestException("ID é obrigatório");
         }
         Produto produto = consultarPorId(produtoRequest.getId());
+        produto.setNome(produtoRequest.getNome());
+        produto.setQuantidadeAtual(produtoRequest.getQuantidadeAtual());
+        produto.setQuantidadeMinima(produtoRequest.getQuantidadeMinima());
+        produto.setPrecoCompra(produtoRequest.getPrecoCompra());
+        produto.setPercentualLucro(produtoRequest.getPercentualLucro());
+        produto.setSituacao(produtoRequest.getSituacao());
         produtoRepository.save(produto);
         return toResponse(produto);
     }

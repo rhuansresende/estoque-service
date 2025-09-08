@@ -1,5 +1,7 @@
 package br.com.desenvolvimento.logica.estoque_service.controller;
 
+import br.com.desenvolvimento.logica.estoque_service.dto.MovimentacaoRequest;
+import br.com.desenvolvimento.logica.estoque_service.dto.MovimentacaoResponse;
 import br.com.desenvolvimento.logica.estoque_service.model.Movimentacao;
 import br.com.desenvolvimento.logica.estoque_service.service.MovimentacaoService;
 import org.apache.coyote.BadRequestException;
@@ -17,12 +19,12 @@ public class MovimentacaoController {
     private MovimentacaoService movimentacaoService;
 
     @GetMapping
-    public List<Movimentacao> listar() {
+    public List<MovimentacaoResponse> listar() {
         return movimentacaoService.listar();
     }
 
     @PostMapping
-    public Movimentacao registrar(@RequestBody Movimentacao movimentacao) throws BadRequestException {
+    public MovimentacaoResponse registrar(@RequestBody MovimentacaoRequest movimentacao) throws BadRequestException {
         return movimentacaoService.registrar(movimentacao);
     }
 
