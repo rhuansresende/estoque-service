@@ -24,9 +24,6 @@ public class ProdutoRequest implements Serializable {
     private BigDecimal precoCompra;
     private BigDecimal percentualLucro;
 
-    @NotNull(message = "Situação é obrigatória")
-    private Situacao situacao;
-
     public ProdutoRequest() {
     }
 
@@ -84,13 +81,5 @@ public class ProdutoRequest implements Serializable {
 
     public void setPercentualLucro(BigDecimal percentualLucro) {
         this.percentualLucro = percentualLucro;
-    }
-
-    public Situacao getSituacao() {
-        return situacao;
-    }
-
-    public void setSituacao(Situacao situacao) {
-        this.situacao = situacao;
     }
 }

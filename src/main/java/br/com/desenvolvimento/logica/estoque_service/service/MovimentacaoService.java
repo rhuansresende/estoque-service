@@ -2,6 +2,7 @@ package br.com.desenvolvimento.logica.estoque_service.service;
 
 import br.com.desenvolvimento.logica.estoque_service.dto.MovimentacaoRequest;
 import br.com.desenvolvimento.logica.estoque_service.dto.MovimentacaoResponse;
+import br.com.desenvolvimento.logica.estoque_service.exception.ValidationException;
 import br.com.desenvolvimento.logica.estoque_service.model.Movimentacao;
 import br.com.desenvolvimento.logica.estoque_service.model.Produto;
 import br.com.desenvolvimento.logica.estoque_service.model.Situacao;
@@ -36,7 +37,7 @@ public class MovimentacaoService {
     public Movimentacao consultarPorId(final Long id) throws BadRequestException {
         return movimentacaoRepository
                 .findById(id)
-                .orElseThrow(() -> new BadRequestException("Movimentação não encontrada."));
+                .orElseThrow(() -> new ValidationException("Movimentação não encontrada."));
     }
 
     public MovimentacaoResponse registrar(MovimentacaoRequest movimentacaoRequest) throws BadRequestException {
@@ -48,7 +49,7 @@ public class MovimentacaoService {
             produto.setPrecoCompra(movimentacaoRequest.getPrecoCompra());
         } else {
             if (produto.getQuantidadeAtual() < movimentacaoRequest.getQuantidade()) {
-                throw new BadRequestException("Quantidade em estoque inferior a quantidade de saída.");
+                throw new ValidationException("Quantidade em estoque inferior a quantidade de saída.");
             }
             produto.setQuantidadeAtual(produto.getQuantidadeAtual() - movimentacaoRequest.getQuantidade());
         }
@@ -60,16 +61,26 @@ public class MovimentacaoService {
 
     public MovimentacaoResponse atualizar(MovimentacaoRequest movimentacaoRequest) throws BadRequestException {
         if (movimentacaoRequest.getId() == null) {
-            throw new BadRequestException("ID é obrigatório");
+            throw new ValidationException("ID é obrigatório");
         }
 
         if (movimentacaoRequest.getJustificativa() == null) {
-            throw new BadRequestException("Justificativa é obrigatório");
+            throw new ValidationException("Justificativa é obrigatório");
         }
 
         Movimentacao movimentacao = consultarPorId(movimentacaoRequest.getId());
 
         var produto = produtoService.consultarPorId(movimentacaoRequest.getProduto().getId());
+        if (movimentacaoRequest.getTipo() == TipoMovimentacao.ENTRADA) {
+            produto.setQuantidadeAtual(produto.getQuantidadeAtual() + movimentacaoRequest.getQuantidade());
+            produto.setPrecoCompra(movimentacaoRequest.getPrecoCompra());
+        } else {
+            if (produto.getQuantidadeAtual() < movimentacaoRequest.getQuantidade()) {
+                throw new ValidationException("Quantidade em estoque inferior a quantidade de saída.");
+            }
+            produto.setQuantidadeAtual(produto.getQuantidadeAtual() - movimentacaoRequest.getQuantidade());
+        }
+        produtoService.atualizar(produto);
         movimentacao.setProduto(produto);
         movimentacao.setTipo(movimentacaoRequest.getTipo());
         movimentacao.setQuantidade(movimentacaoRequest.getQuantidade());

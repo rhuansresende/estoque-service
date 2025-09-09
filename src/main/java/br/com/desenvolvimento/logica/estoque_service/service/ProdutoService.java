@@ -2,6 +2,7 @@ package br.com.desenvolvimento.logica.estoque_service.service;
 
 import br.com.desenvolvimento.logica.estoque_service.dto.ProdutoRequest;
 import br.com.desenvolvimento.logica.estoque_service.dto.ProdutoResponse;
+import br.com.desenvolvimento.logica.estoque_service.exception.ValidationException;
 import br.com.desenvolvimento.logica.estoque_service.model.Produto;
 import br.com.desenvolvimento.logica.estoque_service.model.Situacao;
 import br.com.desenvolvimento.logica.estoque_service.repository.ProdutoRepository;
@@ -22,6 +23,7 @@ public class ProdutoService {
         return produtoRepository.findAll()
                 .stream()
                 .filter(produto -> produto.getSituacao() == Situacao.ATIVO)
+                .sorted((p1, p2) -> p1.getNome().compareTo(p2.getNome()))
                 .map(this::toResponse)
                 .toList();
     }
@@ -29,7 +31,7 @@ public class ProdutoService {
     public Produto consultarPorId(Long id) throws BadRequestException {
         return produtoRepository
                 .findById(id)
-                .orElseThrow(() -> new BadRequestException("Produto não encontrado."));
+                .orElseThrow(() -> new ValidationException("Produto não encontrado."));
     }
 
     public List<ProdutoResponse> buscar(final String filtro) {
@@ -52,13 +54,14 @@ public class ProdutoService {
         }
 
         Produto produto = toEntity(produtoRequest);
+        produto.setSituacao(Situacao.ATIVO);
         produtoRepository.save(produto);
         return toResponse(produto);
     }
 
     public ProdutoResponse atualizar(ProdutoRequest produtoRequest) throws BadRequestException {
         if (produtoRequest.getId() == null) {
-            throw new BadRequestException("ID é obrigatório");
+            throw new ValidationException("ID é obrigatório");
         }
         Produto produto = consultarPorId(produtoRequest.getId());
         produto.setNome(produtoRequest.getNome());
@@ -66,7 +69,6 @@ public class ProdutoService {
         produto.setQuantidadeMinima(produtoRequest.getQuantidadeMinima());
         produto.setPrecoCompra(produtoRequest.getPrecoCompra());
         produto.setPercentualLucro(produtoRequest.getPercentualLucro());
-        produto.setSituacao(produtoRequest.getSituacao());
         produtoRepository.save(produto);
         return toResponse(produto);
     }
@@ -89,7 +91,6 @@ public class ProdutoService {
         produto.setQuantidadeMinima(produtoRequest.getQuantidadeMinima());
         produto.setPrecoCompra(produtoRequest.getPrecoCompra());
         produto.setPercentualLucro(produtoRequest.getPercentualLucro());
-        produto.setSituacao(produtoRequest.getSituacao());
         return produto;
     }
 
