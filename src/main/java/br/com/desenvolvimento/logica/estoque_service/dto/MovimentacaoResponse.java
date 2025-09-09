@@ -1,12 +1,11 @@
 package br.com.desenvolvimento.logica.estoque_service.dto;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 public class MovimentacaoResponse implements Serializable {
 
     private Long id;
-    private String nomeProduto;
+    private ProdutoResponse produto;
     private String tipo;
     private Integer quantidade;
     private String dataMovimentacao;
@@ -22,12 +21,12 @@ public class MovimentacaoResponse implements Serializable {
         this.id = id;
     }
 
-    public String getNomeProduto() {
-        return nomeProduto;
+    public ProdutoResponse getProduto() {
+        return produto;
     }
 
-    public void setNomeProduto(String nomeProduto) {
-        this.nomeProduto = nomeProduto;
+    public void setProduto(ProdutoResponse produto) {
+        this.produto = produto;
     }
 
     public String getTipo() {

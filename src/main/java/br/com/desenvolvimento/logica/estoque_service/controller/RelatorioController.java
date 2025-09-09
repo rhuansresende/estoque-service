@@ -24,8 +24,18 @@ public class RelatorioController {
         return relatorioService.sugestoesCompras();
     }
 
+    @GetMapping("/sugestoes-compras/pdf")
+    public byte[] sugestoesComprasPDF() {
+        return relatorioService.sugestoesComprasPDF();
+    }
+
     @GetMapping("/sugestoes-precos")
     public List<ProdutoResponse> sugestoesPrecos() {
         return relatorioService.sugestoesPrecos();
+    }
+
+    @GetMapping("/sugestoes-precos/pdf")
+    public byte[] sugestoesPrecosPDF() {
+        return relatorioService.sugestoesPrecosPDF();
     }
 }

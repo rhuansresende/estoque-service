@@ -34,7 +34,6 @@ public class Produto {
                 .divide(BigDecimal.valueOf(100), 4, RoundingMode.HALF_UP)
                 .add(BigDecimal.ONE);
 
-
         return precoCompra.multiply(fatorLucro).setScale(2, RoundingMode.HALF_UP);
     }
 

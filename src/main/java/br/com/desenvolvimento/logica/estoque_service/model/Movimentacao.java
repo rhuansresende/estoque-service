@@ -18,6 +18,12 @@ public class Movimentacao {
     @Enumerated(EnumType.STRING)
     private TipoMovimentacao tipo;
 
+    @Column
+    private String justificativa;
+
+    @Enumerated(EnumType.STRING)
+    private Situacao situacao;
+
     private Integer quantidade;
 
     private LocalDateTime data = LocalDateTime.now();
@@ -60,5 +66,21 @@ public class Movimentacao {
 
     public void setData(LocalDateTime data) {
         this.data = data;
+    }
+
+    public String getJustificativa() {
+        return justificativa;
+    }
+
+    public void setJustificativa(String justificativa) {
+        this.justificativa = justificativa;
+    }
+
+    public Situacao getSituacao() {
+        return situacao;
+    }
+
+    public void setSituacao(Situacao situacao) {
+        this.situacao = situacao;
     }
 }

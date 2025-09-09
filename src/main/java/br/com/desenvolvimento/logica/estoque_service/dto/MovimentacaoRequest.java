@@ -7,19 +7,29 @@ import java.math.BigDecimal;
 
 public class MovimentacaoRequest implements Serializable {
 
-    private Long produto;
+    private Long id;
+    private ProdutoRequest produto;
     private TipoMovimentacao tipo;
     private Integer quantidade;
     private BigDecimal precoCompra;
+    private String justificativa;
 
     public MovimentacaoRequest() {
     }
 
-    public Long getProduto() {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public ProdutoRequest getProduto() {
         return produto;
     }
 
-    public void setProduto(Long produto) {
+    public void setProduto(ProdutoRequest produto) {
         this.produto = produto;
     }
 
@@ -45,5 +55,13 @@ public class MovimentacaoRequest implements Serializable {
 
     public void setPrecoCompra(BigDecimal precoCompra) {
         this.precoCompra = precoCompra;
+    }
+
+    public String getJustificativa() {
+        return justificativa;
+    }
+
+    public void setJustificativa(String justificativa) {
+        this.justificativa = justificativa;
     }
 }

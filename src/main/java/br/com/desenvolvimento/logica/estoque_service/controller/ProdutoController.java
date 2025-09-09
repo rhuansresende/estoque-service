@@ -23,6 +23,11 @@ public class ProdutoController {
         return produtoService.listar();
     }
 
+    @GetMapping("/buscar")
+    public List<ProdutoResponse> buscar(@RequestParam(name = "q", required = false) final String filtro) {
+        return produtoService.buscar(filtro);
+    }
+
     @PostMapping
     public ProdutoResponse criar(@RequestBody ProdutoRequest produto) {
         return produtoService.criar(produto);

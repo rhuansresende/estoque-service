@@ -32,6 +32,16 @@ public class ProdutoService {
                 .orElseThrow(() -> new BadRequestException("Produto não encontrado."));
     }
 
+    public List<ProdutoResponse> buscar(final String filtro) {
+        if (filtro == null || filtro.isBlank()) {
+            return listar();
+        }
+        return produtoRepository.findByNomeContainingIgnoreCaseOrCodigoContainingIgnoreCase(filtro, filtro)
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
     public ProdutoResponse criar(@Valid ProdutoRequest produtoRequest) {
         var produtoExistente = produtoRepository.findProdutoByNomeAndSituacao(
                 produtoRequest.getNome().trim().toUpperCase(),
@@ -83,7 +93,7 @@ public class ProdutoService {
         return produto;
     }
 
-    private ProdutoResponse toResponse(final Produto produto) {
+    public ProdutoResponse toResponse(final Produto produto) {
         ProdutoResponse produtoResponse = new ProdutoResponse();
         produtoResponse.setId(produto.getId());
         produtoResponse.setNome(produto.getNome().toUpperCase());
@@ -96,5 +106,4 @@ public class ProdutoService {
         produtoResponse.setSituacao(produto.getSituacao());
         return produtoResponse;
     }
-
 }
