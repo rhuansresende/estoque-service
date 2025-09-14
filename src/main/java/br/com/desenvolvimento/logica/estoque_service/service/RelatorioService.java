@@ -5,6 +5,9 @@ import com.lowagie.text.*;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
@@ -16,7 +19,30 @@ public class RelatorioService {
     @Autowired
     private ProdutoService produtoService;
 
-    public List<ProdutoResponse> sugestoesCompras() {
+    public Page<ProdutoResponse> sugestoesCompras(Pageable pageable) {
+
+        List<ProdutoResponse> filtrados = produtoService.listar()
+                .stream()
+                .sorted((p1, p2) -> p1.getNome().compareTo(p2.getNome()))
+                .filter(p -> p.getQuantidadeAtual() <= p.getQuantidadeMinima())
+                .toList();
+
+        int total = filtrados.size();
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), total);
+
+        List<ProdutoResponse> pagina;
+        if (start > end) {
+            pagina = List.of();
+        } else {
+            pagina = filtrados.subList(start, end);
+        }
+
+        return new PageImpl<>(pagina, pageable, total);
+    }
+
+    private List<ProdutoResponse> sugestoesCompras() {
         return produtoService.listar()
                 .stream()
                 .sorted((p1, p2) -> p1.getNome().compareTo(p2.getNome()))
@@ -64,7 +90,29 @@ public class RelatorioService {
         return out.toByteArray();
     }
 
-    public List<ProdutoResponse> sugestoesPrecos() {
+    public Page<ProdutoResponse> sugestoesPrecos(Pageable pageable) {
+        List<ProdutoResponse> filtrados = produtoService.listar()
+                .stream()
+                .sorted((p1, p2) -> p1.getNome().compareTo(p2.getNome()))
+                .filter(p -> p.getPrecoVenda() != null)
+                .toList();
+
+        int total = filtrados.size();
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), total);
+
+        List<ProdutoResponse> pagina;
+        if (start > end) {
+            pagina = List.of();
+        } else {
+            pagina = filtrados.subList(start, end);
+        }
+
+        return new PageImpl<>(pagina, pageable, total);
+    }
+
+    private List<ProdutoResponse> sugestoesPrecos() {
         return produtoService.listar()
                 .stream()
                 .sorted((p1, p2) -> p1.getNome().compareTo(p2.getNome()))
