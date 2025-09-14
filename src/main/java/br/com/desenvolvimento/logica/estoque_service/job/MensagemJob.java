@@ -12,7 +12,7 @@ public class MensagemJob {
     private MensagemService mensagemService;
 
     @Scheduled(cron = "0 0 10,15,21 * * ?")
-//    @Scheduled(fixedRate = 10000)
+//    @Scheduled(fixedRate = 5000)
     public void executar() {
         mensagemService.verificarProdutos();
     }

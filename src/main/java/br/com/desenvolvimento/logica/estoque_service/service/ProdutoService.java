@@ -9,6 +9,8 @@ import br.com.desenvolvimento.logica.estoque_service.repository.ProdutoRepositor
 import jakarta.validation.Valid;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,7 +21,15 @@ public class ProdutoService {
     @Autowired
     private ProdutoRepository produtoRepository;
 
-    public List<ProdutoResponse> listar() {
+    public Page<ProdutoResponse> listar(String nome, String situacao, Pageable pageable) {
+        Page<Produto> page = produtoRepository.filtrar(
+                nome,
+                situacao != null && !situacao.isBlank() ? Situacao.valueOf(situacao.toUpperCase()) : Situacao.ATIVO,
+                pageable);
+        return page.map(this::toResponse);
+    }
+
+    public List<ProdutoResponse>listar() {
         return produtoRepository.findAll()
                 .stream()
                 .filter(produto -> produto.getSituacao() == Situacao.ATIVO)
@@ -28,7 +38,7 @@ public class ProdutoService {
                 .toList();
     }
 
-    public Produto consultarPorId(Long id) throws BadRequestException {
+    public Produto consultarPorId(Long id) {
         return produtoRepository
                 .findById(id)
                 .orElseThrow(() -> new ValidationException("Produto não encontrado."));
@@ -81,11 +91,17 @@ public class ProdutoService {
         return toResponse(produto);
     }
 
+    public void ativar(Long id) {
+        Produto produto = consultarPorId(id);
+        produto.setSituacao(Situacao.ATIVO);
+        atualizar(produto);
+    }
+
     public void atualizar(Produto produto) {
         produtoRepository.save(produto);
     }
 
-    public void deletar(Long id) throws BadRequestException {
+    public void deletar(Long id) {
         Produto produto = consultarPorId(id);
         produto.setSituacao(Situacao.INATIVO);
         atualizar(produto);
