@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class RelatorioService {
@@ -25,7 +26,7 @@ public class RelatorioService {
                 .stream()
                 .sorted((p1, p2) -> p1.getNome().compareTo(p2.getNome()))
                 .filter(p -> p.getQuantidadeAtual() <= p.getQuantidadeMinima())
-                .toList();
+                .collect(Collectors.toList());
 
         int total = filtrados.size();
 
@@ -47,7 +48,7 @@ public class RelatorioService {
                 .stream()
                 .sorted((p1, p2) -> p1.getNome().compareTo(p2.getNome()))
                 .filter(p -> p.getQuantidadeAtual() <= p.getQuantidadeMinima())
-                .toList();
+                .collect(Collectors.toList());
     }
 
     public byte[] sugestoesComprasPDF() {
@@ -95,7 +96,7 @@ public class RelatorioService {
                 .stream()
                 .sorted((p1, p2) -> p1.getNome().compareTo(p2.getNome()))
                 .filter(p -> p.getPrecoVenda() != null)
-                .toList();
+                .collect(Collectors.toList());
 
         int total = filtrados.size();
 
@@ -117,7 +118,7 @@ public class RelatorioService {
                 .stream()
                 .sorted((p1, p2) -> p1.getNome().compareTo(p2.getNome()))
                 .filter(p -> p.getPrecoVenda() != null)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     public byte[] sugestoesPrecosPDF() {
