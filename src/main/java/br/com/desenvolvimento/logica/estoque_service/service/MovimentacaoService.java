@@ -11,9 +11,13 @@ import br.com.desenvolvimento.logica.estoque_service.repository.MovimentacaoRepo
 import br.com.desenvolvimento.logica.estoque_service.util.DataUtil;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -28,13 +32,35 @@ public class MovimentacaoService {
     @Autowired
     private MensagemService mensagemService;
 
-    public List<MovimentacaoResponse> listar() {
-        return movimentacaoRepository.findAll()
-                .stream()
-                .filter(movimentacao -> movimentacao.getSituacao() != Situacao.INATIVO)
-                .sorted((m1, m2) -> m1.getData().compareTo(m2.getData()))
-                .map(this::toResponse)
-                .toList();
+    public Page<MovimentacaoResponse> listar(Long idProduto, String tipo, LocalDate data, Pageable pageable) {
+        LocalDateTime inicio = null;
+        LocalDateTime fim = null;
+
+        if (data != null) {
+            inicio = data.atStartOfDay();
+            fim = data.atTime(LocalTime.MAX);
+        }
+
+        Page<Movimentacao> page = movimentacaoRepository.filtrar(
+                idProduto != null ? produtoService.consultarPorId(idProduto) : null,
+                tipo != null && !tipo.isBlank() ? TipoMovimentacao.valueOf(tipo.toUpperCase()) : null,
+                inicio,
+                fim,
+                pageable
+                );
+
+        return page.map(this::toResponse);
+
+
+
+
+
+//        return movimentacaoRepository.findAll()
+//                .stream()
+//                .filter(movimentacao -> movimentacao.getSituacao() != Situacao.INATIVO)
+//                .sorted((m1, m2) -> m1.getData().compareTo(m2.getData()))
+//                .map(this::toResponse)
+//                .toList();
     }
 
     public Movimentacao consultarPorId(final Long id) throws BadRequestException {
@@ -107,6 +133,7 @@ public class MovimentacaoService {
         movimentacao.setProduto(produto);
         movimentacao.setTipo(movimentacaoRequest.getTipo());
         movimentacao.setQuantidade(movimentacaoRequest.getQuantidade());
+        movimentacao.setSituacao(Situacao.ATIVO);
         return movimentacao;
     }
 
