@@ -3,10 +3,8 @@ package br.com.desenvolvimento.logica.estoque_service.controller;
 import br.com.desenvolvimento.logica.estoque_service.dto.ProdutoRequest;
 import br.com.desenvolvimento.logica.estoque_service.dto.ProdutoResponse;
 import br.com.desenvolvimento.logica.estoque_service.dto.SituacaoResponse;
-import br.com.desenvolvimento.logica.estoque_service.model.Produto;
 import br.com.desenvolvimento.logica.estoque_service.model.Situacao;
 import br.com.desenvolvimento.logica.estoque_service.service.ProdutoService;
-import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -58,7 +56,7 @@ public class ProdutoController {
     }
 
     @PutMapping
-    public ProdutoResponse atualizar(@RequestBody ProdutoRequest produto) throws BadRequestException {
+    public ProdutoResponse atualizar(@RequestBody ProdutoRequest produto) {
         return produtoService.atualizar(produto);
     }
 

@@ -6,14 +6,14 @@ import br.com.desenvolvimento.logica.estoque_service.exception.ValidationExcepti
 import br.com.desenvolvimento.logica.estoque_service.model.Produto;
 import br.com.desenvolvimento.logica.estoque_service.model.Situacao;
 import br.com.desenvolvimento.logica.estoque_service.repository.ProdutoRepository;
-import jakarta.validation.Valid;
-import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProdutoService {
@@ -35,7 +35,7 @@ public class ProdutoService {
                 .filter(produto -> produto.getSituacao() == Situacao.ATIVO)
                 .sorted((p1, p2) -> p1.getNome().compareTo(p2.getNome()))
                 .map(this::toResponse)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     public Produto consultarPorId(Long id) {
@@ -51,7 +51,7 @@ public class ProdutoService {
         return produtoRepository.findByNomeContainingIgnoreCaseOrCodigoContainingIgnoreCase(filtro, filtro)
                 .stream()
                 .map(this::toResponse)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     public List<ProdutoResponse> consultarProdutosComEstoqueBaixo() {
@@ -59,7 +59,7 @@ public class ProdutoService {
                 .stream()
                 .filter(produto -> produto.getQuantidadeAtual() <= produto.getQuantidadeMinima())
                 .sorted((p1, p2) -> p1.getNome().compareTo(p2.getNome()))
-                .toList();
+                .collect(Collectors.toList());
     }
 
     public ProdutoResponse criar(@Valid ProdutoRequest produtoRequest) {
@@ -77,7 +77,7 @@ public class ProdutoService {
         return toResponse(produto);
     }
 
-    public ProdutoResponse atualizar(ProdutoRequest produtoRequest) throws BadRequestException {
+    public ProdutoResponse atualizar(ProdutoRequest produtoRequest) {
         if (produtoRequest.getId() == null) {
             throw new ValidationException("ID é obrigatório");
         }
