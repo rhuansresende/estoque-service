@@ -9,7 +9,6 @@ import br.com.desenvolvimento.logica.estoque_service.model.Situacao;
 import br.com.desenvolvimento.logica.estoque_service.model.TipoMovimentacao;
 import br.com.desenvolvimento.logica.estoque_service.repository.MovimentacaoRepository;
 import br.com.desenvolvimento.logica.estoque_service.util.DataUtil;
-import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.List;
 
 @Service
 public class MovimentacaoService {
@@ -28,9 +26,6 @@ public class MovimentacaoService {
 
     @Autowired
     private ProdutoService produtoService;
-
-    @Autowired
-    private MensagemService mensagemService;
 
     public Page<MovimentacaoResponse> listar(Long idProduto, String tipo, LocalDate data, Pageable pageable) {
         LocalDateTime inicio = null;
@@ -50,26 +45,15 @@ public class MovimentacaoService {
                 );
 
         return page.map(this::toResponse);
-
-
-
-
-
-//        return movimentacaoRepository.findAll()
-//                .stream()
-//                .filter(movimentacao -> movimentacao.getSituacao() != Situacao.INATIVO)
-//                .sorted((m1, m2) -> m1.getData().compareTo(m2.getData()))
-//                .map(this::toResponse)
-//                .toList();
     }
 
-    public Movimentacao consultarPorId(final Long id) throws BadRequestException {
+    public Movimentacao consultarPorId(final Long id) {
         return movimentacaoRepository
                 .findById(id)
                 .orElseThrow(() -> new ValidationException("Movimentação não encontrada."));
     }
 
-    public MovimentacaoResponse registrar(MovimentacaoRequest movimentacaoRequest) throws BadRequestException {
+    public MovimentacaoResponse registrar(MovimentacaoRequest movimentacaoRequest) {
 
         var produto = produtoService.consultarPorId(movimentacaoRequest.getProduto().getId());
 
@@ -88,7 +72,7 @@ public class MovimentacaoService {
         return toResponse(movimentacao);
     }
 
-    public MovimentacaoResponse atualizar(MovimentacaoRequest movimentacaoRequest) throws BadRequestException {
+    public MovimentacaoResponse atualizar(MovimentacaoRequest movimentacaoRequest) {
         if (movimentacaoRequest.getId() == null) {
             throw new ValidationException("ID é obrigatório");
         }
@@ -120,7 +104,7 @@ public class MovimentacaoService {
         return toResponse(movimentacao);
     }
 
-    public void excluir(final Long id, final String justificativa) throws BadRequestException {
+    public void excluir(final Long id, final String justificativa) {
         Movimentacao movimentacao = consultarPorId(id);
         movimentacao.setJustificativa(justificativa);
         movimentacao.setSituacao(Situacao.INATIVO);
