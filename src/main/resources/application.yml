@@ -1,1 +1,23 @@
-spring.application.name=estoque-service
+server:
+  port: 8000
+spring:
+  application:
+    name: estoque-service
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/estoquedb}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:aA@741859}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: true
+logging:
+  level:
+    org.hibernate.SQL: DEBUG      # SQL gerado
+    org.hibernate.orm.jdbc.bind: TRACE   # valores dos parâmetros
+
