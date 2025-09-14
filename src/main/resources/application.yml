@@ -5,9 +5,9 @@ spring:
     name: estoque-service
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/estoquedb
-    username: postgres
-    password: aA@741859
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/estoquedb}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:aA@741859}
   jpa:
     hibernate:
       ddl-auto: update
