@@ -25,6 +25,9 @@ public class MovimentacaoService {
     @Autowired
     private ProdutoService produtoService;
 
+    @Autowired
+    private MensagemService mensagemService;
+
     public List<MovimentacaoResponse> listar() {
         return movimentacaoRepository.findAll()
                 .stream()

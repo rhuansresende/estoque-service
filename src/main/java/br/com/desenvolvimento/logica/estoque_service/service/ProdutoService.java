@@ -44,6 +44,14 @@ public class ProdutoService {
                 .toList();
     }
 
+    public List<ProdutoResponse> consultarProdutosComEstoqueBaixo() {
+        return this.listar()
+                .stream()
+                .filter(produto -> produto.getQuantidadeAtual() <= produto.getQuantidadeMinima())
+                .sorted((p1, p2) -> p1.getNome().compareTo(p2.getNome()))
+                .toList();
+    }
+
     public ProdutoResponse criar(@Valid ProdutoRequest produtoRequest) {
         var produtoExistente = produtoRepository.findProdutoByNomeAndSituacao(
                 produtoRequest.getNome().trim().toUpperCase(),
