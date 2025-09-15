@@ -1,7 +1,9 @@
 package br.com.desenvolvimento.logica.estoque_service.model;
 
-import javax.persistence.*;
-import java.math.*;
+import jakarta.persistence.*;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @Entity
 @Table(name = "produto")
