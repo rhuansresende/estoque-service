@@ -6,12 +6,12 @@ import br.com.desenvolvimento.logica.estoque_service.exception.ValidationExcepti
 import br.com.desenvolvimento.logica.estoque_service.model.Produto;
 import br.com.desenvolvimento.logica.estoque_service.model.Situacao;
 import br.com.desenvolvimento.logica.estoque_service.repository.ProdutoRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 

@@ -1,6 +1,7 @@
 package br.com.desenvolvimento.logica.estoque_service.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
 @Entity
