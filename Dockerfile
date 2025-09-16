@@ -1,33 +1,9 @@
-# ===========================
-# Stage 1: Build com Maven
-# ===========================
-FROM maven:3.9.4-eclipse-temurin-11 AS build
-
-# não precisa sobrescrever JAVA_HOME, já vem pronto nessa imagem
-RUN java -version && mvn -version
-
+FROM maven:3.9.4-eclipse-temurin-21 AS build
 WORKDIR /app
-
-# Copia apenas o pom.xml primeiro (cache das dependências)
-COPY pom.xml ./
-
-RUN mvn -B -f pom.xml -e -DskipTests dependency:go-offline
-
-# Copia o restante do código
-COPY src src
-
+COPY . .
 RUN mvn -B -DskipTests clean package
 
-
-# ===========================
-# Stage 2: Runtime com JRE
-# ===========================
-FROM eclipse-temurin:11-jre
-
+FROM eclipse-temurin:21-jre AS runtime
 WORKDIR /app
-
 COPY --from=build /app/target/*.jar app.jar
-
-EXPOSE 8000
-
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+ENTRYPOINT ["java","-jar","app.jar"]
