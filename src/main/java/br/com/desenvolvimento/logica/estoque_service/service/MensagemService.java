@@ -12,7 +12,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Service
 public class MensagemService {
@@ -50,26 +52,39 @@ public class MensagemService {
                 .orElseThrow(() -> new ValidationException("Mensagem não encontrada."));
     }
 
+    public Mensagem consultarPorMensagemAndDataCriacao(final String mensagem) {
+        LocalDate today = LocalDate.now();
+        LocalDateTime startOfDay = today.atTime(LocalTime.MIN);
+        LocalDateTime endOfDay = today.atTime(LocalTime.MAX);
+
+        return mensagemRepository.findByMensagemIgnoreCaseAndDataCriacaoBetween(mensagem, startOfDay, endOfDay);
+    }
+
     public void verificarProdutos() {
         produtoService.consultarProdutosComEstoqueBaixo()
                 .forEach(produtoResponse -> {
+
                     String textoMensagem = String.format(
                             "O produto %s está com o estoque crítico. Faça a compra imediatamente.",
                             produtoResponse.getNome()
                     );
 
-                    Mensagem mensagem = new Mensagem();
-                    mensagem.setTitulo("Produto com estoque crítico.");
-                    mensagem.setMensagem(textoMensagem);
-                    mensagem.setTipoMensagem(TipoMensagem.CRITICA);
-                    mensagemRepository.save(mensagem);
+                    var mensagemExistente = consultarPorMensagemAndDataCriacao(textoMensagem);
+
+                    if (mensagemExistente == null) {
+                        Mensagem mensagem = new Mensagem();
+                        mensagem.setTitulo("Produto com estoque crítico.");
+                        mensagem.setMensagem(textoMensagem);
+                        mensagem.setTipoMensagem(TipoMensagem.CRITICA);
+                        mensagemRepository.save(mensagem);
+                    }
                 });
     }
 
     public MensagemResponse lerMensagem(final Long id) {
         Mensagem mensagem = consultarPorId(id);
         mensagem.setStatus(StatusMensagem.LIDA);
-        mensagem.setAtualizadoEm(LocalDateTime.now());
+        mensagem.setDataAtualizacao(LocalDateTime.now());
         mensagemRepository.save(mensagem);
         return toResponse(mensagem);
     }
@@ -77,7 +92,7 @@ public class MensagemService {
     public void excluirMensagem(final Long id) {
         Mensagem mensagem = consultarPorId(id);
         mensagem.setStatus(StatusMensagem.EXCLUIDA);
-        mensagem.setAtualizadoEm(LocalDateTime.now());
+        mensagem.setDataAtualizacao(LocalDateTime.now());
         mensagemRepository.save(mensagem);
     }
 
@@ -88,7 +103,7 @@ public class MensagemService {
         mensagemResponse.setMensagem(mensagem.getMensagem());
         mensagemResponse.setTipoMensagem(mensagem.getTipoMensagem());
         mensagemResponse.setDataCriacao(DataUtil.LocalDateTimeToString(
-                mensagem.getCriadoEm(),
+                mensagem.getDataCriacao(),
                 DataUtil.PATTERN_DDMMYYYYHHMMSS));
         return mensagemResponse;
     }

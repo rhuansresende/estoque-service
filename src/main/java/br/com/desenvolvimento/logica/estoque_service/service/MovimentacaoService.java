@@ -98,7 +98,7 @@ public class MovimentacaoService {
         movimentacao.setTipo(movimentacaoRequest.getTipo());
         movimentacao.setQuantidade(movimentacaoRequest.getQuantidade());
         movimentacao.setJustificativa(movimentacaoRequest.getJustificativa());
-        movimentacao.setData(LocalDateTime.now());
+        movimentacao.setDataAtualizacao(LocalDateTime.now());
         movimentacao.setSituacao(Situacao.ALTERADO);
         movimentacaoRepository.save(movimentacao);
         return toResponse(movimentacao);
@@ -108,7 +108,7 @@ public class MovimentacaoService {
         Movimentacao movimentacao = consultarPorId(id);
         movimentacao.setJustificativa(justificativa);
         movimentacao.setSituacao(Situacao.INATIVO);
-        movimentacao.setData(LocalDateTime.now());
+        movimentacao.setDataAtualizacao(LocalDateTime.now());
         movimentacaoRepository.save(movimentacao);
     }
 
@@ -128,7 +128,7 @@ public class MovimentacaoService {
         movimentacaoResponse.setTipo(movimentacao.getTipo().name());
         movimentacaoResponse.setQuantidade(movimentacao.getQuantidade());
         movimentacaoResponse.setDataMovimentacao(DataUtil.LocalDateTimeToString(
-                movimentacao.getData(),
+                movimentacao.getDataCriacao(),
                 DataUtil.PATTERN_DDMMYYYYHHMMSS)
         );
         return movimentacaoResponse;

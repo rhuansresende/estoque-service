@@ -44,7 +44,7 @@ public class MensagemRepositoryImpl implements MensagemRepositoryCustom {
         String sql = select(false) +
                 from() +
                 where(status, titulo, tipoMensagem, inicio, fim) +
-                "ORDER BY m.criado_em DESC, m.titulo ASC";
+                "ORDER BY m.data_criacao DESC, m.titulo ASC";
 
         Query query = em.createNativeQuery(sql, Mensagem.class);
         setParameters(query, status, titulo, tipoMensagem, inicio, fim);
@@ -101,7 +101,7 @@ public class MensagemRepositoryImpl implements MensagemRepositoryCustom {
             sql.append(" AND m.tipo_mensagem = :tipoMensagem \n");
         }
         if (inicio != null && fim != null) {
-            sql.append(" AND m.criado_em BETWEEN :inicio AND :fim \n");
+            sql.append(" AND m.data_criacao BETWEEN :inicio AND :fim \n");
         }
         return sql.toString();
     }

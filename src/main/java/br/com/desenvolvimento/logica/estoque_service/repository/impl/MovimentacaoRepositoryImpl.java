@@ -43,7 +43,7 @@ public class MovimentacaoRepositoryImpl implements MovimentacaoRepositoryCustom 
         String sql = select(false) +
                 from(produto) +
                 where(produto, tipoMovimentacao, inicio, fim) +
-                "ORDER BY m.data DESC";
+                "ORDER BY m.data_criacao DESC";
 
         Query query = em.createNativeQuery(sql, Movimentacao.class);
         setParameters(query, produto, tipoMovimentacao, inicio, fim);
@@ -101,7 +101,7 @@ public class MovimentacaoRepositoryImpl implements MovimentacaoRepositoryCustom 
             sql.append(" AND m.tipo = :tipoMovimentacao \n");
         }
         if (inicio != null && fim != null) {
-            sql.append(" AND m.data BETWEEN :inicio AND :fim \n");
+            sql.append(" AND m.data_criacao BETWEEN :inicio AND :fim \n");
         }
 
         return sql.toString();
