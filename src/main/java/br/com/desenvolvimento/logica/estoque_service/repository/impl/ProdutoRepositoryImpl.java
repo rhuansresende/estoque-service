@@ -29,6 +29,25 @@ public class ProdutoRepositoryImpl implements ProdutoRepositoryCustom {
         return new PageImpl<>(result, pageable, total);
     }
 
+    @Override
+    public List<Produto> consultarProdutoPorNomeOuCodigoEAtivo(String nome, String codigo, Situacao situacao) {
+        String sql = """
+        SELECT *
+        FROM produto p
+        WHERE (unaccent(upper(p.nome)) LIKE unaccent(upper(concat('%', :nome, '%')))
+            OR unaccent(upper(p.codigo)) LIKE unaccent(upper(concat('%', :codigo, '%'))))
+          AND p.situacao = :situacao
+        """;
+
+        Query query = em.createNativeQuery(sql, Produto.class);
+        query.setParameter("nome", nome);
+        query.setParameter("codigo", codigo);
+        query.setParameter("situacao", situacao.name());
+
+        return query.getResultList();
+    }
+
+
     private List<Produto> result(String nome, Situacao situacao, Pageable pageable) {
         String sql = select(false) +
                 from() +

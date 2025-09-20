@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "produto")
@@ -25,6 +26,17 @@ public class Produto {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Situacao situacao;
+
+    @Column(name = "data_criacao", columnDefinition = "timestamp")
+    private LocalDateTime dataCriacao;
+
+    @Column(name = "data_atualizacao", columnDefinition = "timestamp")
+    private LocalDateTime dataAtualizacao;
+
+    @PrePersist
+    public void prePersist() {
+        this.dataCriacao = LocalDateTime.now();
+    }
 
     public BigDecimal getPrecoVenda() {
         if (precoCompra == null || percentualLucro == null) {
@@ -100,5 +112,21 @@ public class Produto {
 
     public void setSituacao(Situacao situacao) {
         this.situacao = situacao;
+    }
+
+    public LocalDateTime getDataCriacao() {
+        return dataCriacao;
+    }
+
+    public void setDataCriacao(LocalDateTime dataCriacao) {
+        this.dataCriacao = dataCriacao;
+    }
+
+    public LocalDateTime getDataAtualizacao() {
+        return dataAtualizacao;
+    }
+
+    public void setDataAtualizacao(LocalDateTime dataAtualizacao) {
+        this.dataAtualizacao = dataAtualizacao;
     }
 }

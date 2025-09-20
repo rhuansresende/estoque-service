@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,7 +49,7 @@ public class ProdutoService {
         if (filtro == null || filtro.isBlank()) {
             return listar();
         }
-        return produtoRepository.findByNomeContainingIgnoreCaseOrCodigoContainingIgnoreCase(filtro, filtro)
+        return produtoRepository.consultarProdutoPorNomeOuCodigoEAtivo(filtro, filtro, Situacao.ATIVO)
                 .stream()
                 .map(this::toResponse)
                 .collect(Collectors.toList());
@@ -98,12 +99,14 @@ public class ProdutoService {
     }
 
     public void atualizar(Produto produto) {
+        produto.setDataAtualizacao(LocalDateTime.now());
         produtoRepository.save(produto);
     }
 
     public void deletar(Long id) {
         Produto produto = consultarPorId(id);
         produto.setSituacao(Situacao.INATIVO);
+        produto.setDataAtualizacao(LocalDateTime.now());
         atualizar(produto);
     }
 

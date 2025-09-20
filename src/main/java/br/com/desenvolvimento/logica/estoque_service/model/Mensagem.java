@@ -24,12 +24,15 @@ public class Mensagem {
     @Enumerated(EnumType.STRING)
     private TipoMensagem tipoMensagem;
 
-    private LocalDateTime criadoEm;
-    private LocalDateTime atualizadoEm;
+    @Column(name = "data_criacao", columnDefinition = "timestamp")
+    private LocalDateTime dataCriacao;
+
+    @Column(name = "data_atualizacao", columnDefinition = "timestamp")
+    private LocalDateTime dataAtualizacao;
 
     @PrePersist
     public void prePersist() {
-        this.criadoEm = LocalDateTime.now();
+        this.dataCriacao = LocalDateTime.now();
         this.status = StatusMensagem.NAO_LIDA;
     }
 
@@ -73,19 +76,19 @@ public class Mensagem {
         this.tipoMensagem = tipoMensagem;
     }
 
-    public LocalDateTime getCriadoEm() {
-        return criadoEm;
+    public LocalDateTime getDataCriacao() {
+        return dataCriacao;
     }
 
-    public void setCriadoEm(LocalDateTime criadoEm) {
-        this.criadoEm = criadoEm;
+    public void setDataCriacao(LocalDateTime dataCriacao) {
+        this.dataCriacao = dataCriacao;
     }
 
-    public LocalDateTime getAtualizadoEm() {
-        return atualizadoEm;
+    public LocalDateTime getDataAtualizacao() {
+        return dataAtualizacao;
     }
 
-    public void setAtualizadoEm(LocalDateTime atualizadoEm) {
-        this.atualizadoEm = atualizadoEm;
+    public void setDataAtualizacao(LocalDateTime dataAtualizacao) {
+        this.dataAtualizacao = dataAtualizacao;
     }
 }

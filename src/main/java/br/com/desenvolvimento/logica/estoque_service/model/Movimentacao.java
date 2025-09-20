@@ -26,7 +26,16 @@ public class Movimentacao {
 
     private Integer quantidade;
 
-    private LocalDateTime data = LocalDateTime.now();
+    @Column(name = "data_criacao", columnDefinition = "timestamp")
+    private LocalDateTime dataCriacao;
+
+    @Column(name = "data_atualizacao", columnDefinition = "timestamp")
+    private LocalDateTime dataAtualizacao;
+
+    @PrePersist
+    public void prePersist() {
+        this.dataCriacao = LocalDateTime.now();
+    }
 
     public Long getId() {
         return id;
@@ -52,22 +61,6 @@ public class Movimentacao {
         this.tipo = tipo;
     }
 
-    public Integer getQuantidade() {
-        return quantidade;
-    }
-
-    public void setQuantidade(Integer quantidade) {
-        this.quantidade = quantidade;
-    }
-
-    public LocalDateTime getData() {
-        return data;
-    }
-
-    public void setData(LocalDateTime data) {
-        this.data = data;
-    }
-
     public String getJustificativa() {
         return justificativa;
     }
@@ -82,5 +75,29 @@ public class Movimentacao {
 
     public void setSituacao(Situacao situacao) {
         this.situacao = situacao;
+    }
+
+    public Integer getQuantidade() {
+        return quantidade;
+    }
+
+    public void setQuantidade(Integer quantidade) {
+        this.quantidade = quantidade;
+    }
+
+    public LocalDateTime getDataCriacao() {
+        return dataCriacao;
+    }
+
+    public void setDataCriacao(LocalDateTime dataCriacao) {
+        this.dataCriacao = dataCriacao;
+    }
+
+    public LocalDateTime getDataAtualizacao() {
+        return dataAtualizacao;
+    }
+
+    public void setDataAtualizacao(LocalDateTime dataAtualizacao) {
+        this.dataAtualizacao = dataAtualizacao;
     }
 }
